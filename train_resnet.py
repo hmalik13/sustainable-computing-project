@@ -38,7 +38,7 @@ def train_model(cloud_provider, region, instance_type):
     tracker = EmissionsTracker(
         project_name=f"{cloud_provider}_resnet_training",
         output_dir="./results",
-        output_file=f"{cloud_provider.lower()}_emissions.csv"
+        output_file=f"{cloud_provider.lower()}_{region}_emissions.csv",
     )
     tracker.start()
     
@@ -46,8 +46,8 @@ def train_model(cloud_provider, region, instance_type):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
     # Hyperparameters
-    num_epochs = 10
-    batch_size = 128
+    num_epochs = 100
+    batch_size = 64
     learning_rate = 0.001
     
     # CIFAR-10 dataset
@@ -120,7 +120,7 @@ def train_model(cloud_provider, region, instance_type):
     
     # Save metadata to JSON
     os.makedirs("./results", exist_ok=True)
-    metadata_file = f"./results/{cloud_provider.lower()}_metadata.json"
+    metadata_file = f"./results/{cloud_provider.lower()}_{region}_metadata.json"
     with open(metadata_file, 'w') as f:
         json.dump(metadata, f, indent=4)
     
@@ -128,7 +128,7 @@ def train_model(cloud_provider, region, instance_type):
     print(f"Training completed!")
     print(f"Runtime: {training_time:.2f} seconds ({training_time/60:.2f} minutes)")
     print(f"Metadata saved to: {metadata_file}")
-    print(f"Emissions data saved to: ./results/{cloud_provider.lower()}_emissions.csv")
+    print(f"Emissions data saved to: ./results/{cloud_provider.lower()}_{region}_emissions.csv")
     print(f"{'='*50}\n")
     
     return metadata
@@ -141,9 +141,9 @@ if __name__ == "__main__":
                        choices=['AWS', 'GCP', 'Azure'],
                        help='Cloud provider name')
     parser.add_argument('--region', type=str, required=True,
-                       help='Cloud region (e.g., us-east-1)')
+                       help='Cloud region')
     parser.add_argument('--instance', type=str, required=True,
-                       help='Instance type (e.g., g4dn.xlarge)')
+                       help='Instance type')
     
     args = parser.parse_args()
     
