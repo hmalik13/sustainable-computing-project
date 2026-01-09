@@ -115,7 +115,7 @@ def train_model(cloud_provider, region, instance_type):
     metadata["num_epochs"] = num_epochs
     metadata["batch_size"] = batch_size
     metadata["final_loss"] = epoch_losses[-1]
-    metadata["energy_kwh"] = emissions_data  # This is actually emissions in kg
+    metadata["energy_kwh"] = emissions_data  # emissions in kg
     metadata["notes"] = "Training completed successfully"
     
     # Save metadata to JSON
